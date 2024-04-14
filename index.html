@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tax Calculator</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Additional styling */
+        .error-icon {
+            display: none;
+            font-size: 18px;
+            color: red;
+            cursor: pointer;
+        }
+        
+        .container-form {
+            max-width: 500px;
+            margin: 50px auto;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .container-result {
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container container-form">
+        <h1 class="mt-5 text-center">Tax Calculator</h1>
+        <form id="taxForm">
+            <div class="form-group">
+                <label for="grossIncome">Gross Annual Income (₹):</label>
+                <input type="number" class="form-control" id="grossIncome" required>
+                <span class="error-icon" title="Invalid input!">⚠</span>
+            </div>
+            <div class="form-group">
+               <label for="extraIncome">Extra Income (₹):</label>
+               <input type="number" class="form-control" id="extraIncome" required>
+               <span class="error-icon" title="Invalid input!">⚠</span>
+            </div>
+
+            <div class="form-group">
+                <label for="totalDeductions">Total Applicable Deductions (₹):</label>
+                <input type="number" class="form-control" id="totalDeductions">
+                <span class="error-icon" title="Invalid input!">⚠</span>
+            </div>
+
+            <div class="form-group">
+                <label for="age">Age:</label>
+                <select id="age" class="form-control" required>
+                    <option value="" disabled selected>Select age group</option>
+                    <option value="<40"><40</option>
+                    <option value="40-60">≥40 <60</option>
+                    <option value="≥60">≥60</option>
+                </select>
+                <span class="error-icon" title="Age is mandatory!">⚠</span>
+            </div>
+
+            <button type="button" class="btn btn-primary btn-block" onclick="calculateTax()">Calculate Tax</button>
+        </form>
+    </div>
+
+    <!-- Result Container -->
+    <div id="resultContainer" class="container-result" style="display: none;">
+        <h2>Tax Calculation Result</h2>
+        <div id="resultContent">
+            <p>Your overall income after deductions will be: <span id="overallIncome"></span></p>
+            <p>Your tax amount will be: <span id="taxAmount"></span></p>
+        </div>
+    </div>
+
+    <!-- jQuery and Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        function calculateTax() {
+            const grossIncome = parseFloat($('#grossIncome').val());
+            const extraIncome = parseFloat($('#extraIncome').val()) || 0;
+            const totalDeductions = parseFloat($('#totalDeductions').val()) || 0;
+            const age = $('#age').val();
+
+            let overallIncome = grossIncome + extraIncome - totalDeductions;
+            let taxAmount = 0;
+
+            if (overallIncome > 800000) {
+                switch (age) {
+                    case '<40':
+                        taxAmount = 0.3 * (overallIncome - 800000);
+                        break;
+                    case '40-60':
+                        taxAmount = 0.4 * (overallIncome - 800000);
+                        break;
+                    case '≥60':
+                        taxAmount = 0.1 * (overallIncome - 800000);
+                        break;
+                }
+            }
+
+            $('#overallIncome').text("₹" + overallIncome.toFixed(2));
+            $('#taxAmount').text("₹" + taxAmount.toFixed(2));
+
+            // Show the result container
+            $('#resultContainer').show();
+        }
+    </script>
+</body>
+</html>
